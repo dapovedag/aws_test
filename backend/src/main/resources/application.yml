@@ -1,0 +1,59 @@
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: native
+
+spring:
+  application:
+    name: prueba-aws-backend
+  datasource:
+    url: jdbc:postgresql://${RDS_HOST:localhost}:${RDS_PORT:5432}/${RDS_DB:datalake}?ApplicationName=prueba-aws-backend&sslmode=${RDS_SSLMODE:require}
+    username: ${RDS_USER:app_ro}
+    password: ${RDS_PASSWORD:postgres}
+    hikari:
+      pool-name: prueba-pool
+      maximum-pool-size: 10
+      minimum-idle: 1
+      connection-timeout: 5000
+      idle-timeout: 60000
+      validation-timeout: 3000
+      leak-detection-threshold: 30000
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+app:
+  aws:
+    region: ${AWS_REGION:us-east-1}
+    public-bucket: ${PUBLIC_BUCKET:prueba-aws-public}
+    athena-results-bucket: ${ATHENA_RESULTS_BUCKET:prueba-aws-athena-results}
+    athena-workgroup: ${ATHENA_WORKGROUP:prueba-aws-wg}
+    athena-database: ${ATHENA_DATABASE:datalake_energia}
+  github:
+    token: ${GITHUB_TOKEN:}
+    repo: ${GITHUB_REPO:dapovedag/aws_test}
+    branch: ${GITHUB_BRANCH:main}
+  edit-token: ${EDIT_TOKEN:dev-token}
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:5176,https://*.vercel.app}
+  report:
+    regenerate-on-startup: ${REPORT_REGEN_STARTUP:true}
+    cron: ${REPORT_CRON:0 0 6 * * *}
+  cache:
+    athena-ttl-seconds: 300
+
+logging:
+  level:
+    root: INFO
+    com.prueba: DEBUG
+    org.springframework.web: INFO
+    com.zaxxer.hikari: INFO

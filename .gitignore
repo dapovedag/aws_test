@@ -1,0 +1,66 @@
+# Secrets — NEVER commit
+.env
+.env.local
+.env.production
+.env.*.local
+*.pem
+*.key
+.aws/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+*.log
+npm-debug.log*
+
+# Java / backend
+target/
+*.class
+*.jar
+*.war
+.idea/
+*.iml
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+scripts/output/
+scripts/data/.cache/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+
+# Build artifacts
+backend/src/main/resources/static/
+
+# Local tools and prior preview workspace
+/tools/
+frontend-preview/
+.claude/
+PruebaAWS.pdf
+report.pdf
+infra/terraform/.secrets/
+infra/terraform/terraform.tfvars
+infra/terraform/apply.log
+infra/terraform/apply2.log
+infra/terraform/apply3.log
+
+# Local PDF preview output
+pdf-preview*.pdf
+

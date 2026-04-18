@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Datalake Energía · Prueba AWS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="mast-left">
+        <span id="today">Abril 2026</span>
+      </div>
+      <div class="mast-title">Prueba AWS · Datalake de energía</div>
+      <div class="mast-right">
+        <span id="api-status">cargando…</span>
+        <span>Diego Poveda · dapovedag@gmail.com</span>
+      </div>
+    </header>
+
+    <nav class="tabs" id="tabs-nav" aria-label="Secciones de la prueba">
+      <button class="tab active" data-tab="resumen">Resumen</button>
+      <button class="tab" data-tab="ej1-req">Ej.1 · Requisitos técnicos</button>
+      <button class="tab" data-tab="ej1-docs">Ej.1 · Documentación</button>
+      <button class="tab" data-tab="ej1-plus">Ej.1 · Plus</button>
+      <button class="tab" data-tab="ej2">Ej.2 · Arquitectura divisas</button>
+      <button class="tab" data-tab="ej3">Ej.3 · Preguntas (5)</button>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- TAB · RESUMEN                                                -->
+    <!-- ============================================================ -->
+    <main class="tab-pane active" data-pane="resumen">
+      <section class="hero">
+        <div class="rule top"></div>
+        <h1>El territorio<br /><em>de un kilovatio.</em></h1>
+        <div class="deck">
+          Datalake en AWS para una comercializadora de energía:
+          <strong>RDS PostgreSQL → S3 → Glue → Athena → Redshift</strong>
+          con modelo dimensional, IaC Terraform y PDF autocontenido descargable.
+        </div>
+        <div class="rule bot"></div>
+      </section>
+
+      <!-- Banner explicativo del sistema -->
+      <aside class="system-explainer">
+        <div class="se-grid">
+          <div class="se-block">
+            <div class="se-tag">¿Qué es?</div>
+            <h3>Datalake analítico para una comercializadora de energía.</h3>
+            <p>
+              La empresa compra electricidad a generadores en el mercado mayorista
+              (eólica, hidroeléctrica, nuclear, solar, biomasa) y la revende a clientes
+              residenciales, comerciales e industriales. Su sistema transaccional exporta
+              proveedores, clientes y transacciones que necesitan ser ingestados, transformados
+              y analizados a escala.
+            </p>
+          </div>
+          <div class="se-block">
+            <div class="se-tag">¿Para qué sirve esta solución?</div>
+            <h3>Convierte CSV operacional en analítica gobernada.</h3>
+            <p>
+              El pipeline ingiere CSVs particionados por fecha de carga, los cataloga
+              automáticamente, los transforma a Parquet+Snappy en una zona procesada,
+              expone consultas SQL desde Python con Athena, y opcionalmente carga el resultado
+              a un datawarehouse Redshift. Lake Formation gobierna el acceso por dominio
+              (PII vs Public) sin escribir bucket policies a mano.
+            </p>
+          </div>
+          <div class="se-block">
+            <div class="se-tag">¿Para quién es esta entrega?</div>
+            <h3>Una prueba técnica de Data Engineer Senior+ en AWS.</h3>
+            <p>
+              El evaluador puede recorrer las pestañas (1 por bloque del enunciado),
+              ejecutar queries Athena en vivo, descargar el PDF autocontenido con todas las respuestas,
+              ver el dashboard del Ej.2 con datos reales de 90.000 ticks, y verificar el
+              costo medido en tiempo real desde las APIs de AWS.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Botón destacado verde para descargar PDF -->
+      <aside class="cta-print">
+        <button id="cta-pdf-big" class="cta-button">
+          <svg viewBox="0 0 16 16" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 1h7l4 4v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm6 1H3v13h11V6h-4a1 1 0 0 1-1-1V2zm1 .4V5h2.6L10 2.4z"/></svg>
+          <span class="cta-text">
+            <span class="cta-title">Descargar PDF con todas las respuestas</span>
+            <span class="cta-sub">Documento autocontenido · contiene Ej.1 + Ej.2 + Ej.3 + costos · regenerado en cada cambio</span>
+          </span>
+          <span class="cta-arrow">→</span>
+        </button>
+      </aside>
+
+      <aside class="onboarding">
+        <div class="onb-title">Cómo navegar esta entrega</div>
+        <ol class="onb-steps">
+          <li><strong>Pestañas arriba</strong> · cada una mapea 1:1 a un bloque del enunciado: Resumen, Ej.1 Requisitos técnicos, Ej.1 Documentación, Ej.1 Plus, Ej.2, Ej.3.</li>
+          <li><strong>Esta pestaña (Resumen)</strong> · datos en vivo desde RDS · modelo dimensional · costo medido HOY desde APIs AWS.</li>
+          <li><strong>Panel derecho</strong> · descarga del PDF entregable y exportar CSV de cualquier tabla.</li>
+          <li><strong>Pestañas Ej.2 y Ej.3</strong> · respuestas autoritativas, no editables. Diagrama Mermaid con zoom + dashboard live para Ej.2 · 5 cards de preguntas para Ej.3.</li>
+        </ol>
+        <div class="onb-meta">
+          <span><span class="ok-mark">●</span> Live · datos del RDS</span>
+          <span class="sep">·</span>
+          <a class="link" target="_blank" href="https://github.com/dapovedag/aws_test">Repo GitHub</a>
+          <span class="sep">·</span>
+          <a class="link" target="_blank" href="https://prueba-aws-100-49-66-199.nip.io/api/health">Backend API</a>
+        </div>
+      </aside>
+
+      <section class="map-wrap">
+        <canvas id="terrain-canvas"></canvas>
+        <div class="compass"><span>N</span><div class="needle"></div></div>
+        <div class="coords" id="kpis-coords">cargando KPIs…</div>
+        <div class="caption">Fig. 3 — Topografía analítica del datalake.</div>
+      </section>
+
+      <section class="legend-bar">
+        <div><span class="dot eolica"></span>Eólica</div>
+        <div><span class="dot hidro"></span>Hidroeléctrica</div>
+        <div><span class="dot nuclear"></span>Nuclear</div>
+        <div class="filler"></div>
+        <div>RDS → S3 → Glue → Athena → Redshift</div>
+      </section>
+
+      <article class="chapter">
+        <header><span class="chapnum">A.</span><h2>Origen de datos · RDS PostgreSQL.</h2></header>
+        <p class="hint">Conexión real al RDS · backend lee y devuelve schemas, tablas, conteos. Si ves "Live" arriba a la derecha, es producción.</p>
+        <div class="stack-block">
+          <div class="stack-head">Stack en uso aquí</div>
+          <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">Amazon RDS <span class="acronym">Relational Database Service</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Servicio gestionado de bases de datos relacionales en AWS (PostgreSQL, MySQL, Oracle, SQL Server, MariaDB). AWS se ocupa de provisioning, backups, parches y failover; tú solo conectas y consultas.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Aloja la base PostgreSQL <code>db.t4g.micro</code> con los 4 schemas. Es la "fuente de verdad transaccional" que simula el sistema de la comercializadora.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">PostgreSQL 16 <span class="acronym">RDBMS</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Base de datos relacional open-source con tipos avanzados (JSONB, arrays, ENUMs), índices flexibles, triggers, y soporte completo de SQL estándar.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Modela el dominio energía con FKs, constraints CHECK, columnas <code>GENERATED</code> y vistas analíticas. Garantiza integridad referencial sin código de aplicación.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Spring Boot 3 <span class="acronym">backend Java</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Framework Java para construir aplicaciones REST y microservicios con configuración por convención y autoconfiguración.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Backend que vive en EC2 detrás de Caddy. Expone <code>/api/datasource</code>, <code>/api/proveedores</code>, <code>/api/clientes</code>, etc. consultando RDS con HikariCP.</div>
+            </div>
+          </div>
+        </div>
+        <div id="datasource-card" class="ds-card">cargando…</div>
+      </article>
+
+      <article class="chapter">
+        <header><span class="chapnum">B.</span><h2>Modelo dimensional (estrella + OLTP).</h2></header>
+        <p class="hint">Schema <strong>core</strong> simula el sistema transaccional fuente · <strong>dwh</strong> es la estrella desnormalizada que el ETL Glue materializa en Parquet en S3 y replico también en RDS para inspección directa. Diagrama ER con zoom (rueda del mouse o pinch).</p>
+        <div class="stack-block">
+          <div class="stack-head">Conceptos en uso aquí</div>
+          <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">Modelo OLTP normalizado <span class="acronym">3NF</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Diseño relacional con tablas normalizadas (3ª forma normal): cada hecho se almacena una sola vez, las entidades se separan en tablas con FKs.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Schema <code>core</code> · simula cómo guardaría los datos un sistema transaccional real (proveedor, cliente, ciudad, transaccion) con FKs y CHECKs.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Modelo dimensional (estrella) <span class="acronym">Kimball</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Patrón de data warehouse: tabla central de hechos (fact) con métricas + tablas de dimensiones (dim) con descriptores. Optimiza queries analíticas.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Schema <code>dwh</code> · <code>fact_transaccion</code> + 5 dimensiones (proveedor, cliente, ciudad, tipo_energia, fecha). Mismo modelo que el ETL materializa en S3 processed.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Mermaid <span class="acronym">diagrams as code</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Librería JavaScript que renderiza diagramas (ER, flowchart, gantt, sequence) desde sintaxis tipo Markdown a SVG.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Renderiza el ER del modelo en el navegador desde el endpoint <code>/api/data-model</code>. Soporta zoom + pan habilitado en este front.</div>
+            </div>
+          </div>
+        </div>
+        <div id="er-mermaid" class="er-diagram zoomable">cargando ER…</div>
+        <div id="tables-list" class="tables-list"></div>
+      </article>
+
+      <article class="chapter">
+        <header><span class="chapnum">C.</span><h2>Generación del set · Faker, semilla 42.</h2></header>
+        <p class="hint">Dataset reproducible bit a bit. Ejecuto <code>python scripts/00_generate_and_load.py</code> para regenerar el RDS local.</p>
+        <div class="stack-block">
+          <div class="stack-head">Stack en uso aquí</div>
+          <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">Faker (Python) <span class="acronym">data generation</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Librería Python que produce datos sintéticos realistas: nombres, direcciones, emails, IDs, empresas, fechas. Soporta locales (es_CO en mi caso).</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Genera 50 proveedores, 500 clientes y 10.000 transacciones con semilla fija (42) para reproducibilidad total entre corridas.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">psycopg2 + COPY FROM STDIN <span class="acronym">bulk insert</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Driver oficial PostgreSQL para Python. <code>COPY FROM STDIN</code> es el comando de carga masiva más rápido en Postgres (10-100× más rápido que INSERT).</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Inserta las 10.000 transacciones en menos de 2 segundos · sin overhead de prepared statements ni round-trips por fila.</div>
+            </div>
+          </div>
+        </div>
+        <div class="gen-grid">
+          <div class="gen-card">
+            <h4>Volúmenes</h4><ul id="gen-volumes"></ul>
+          </div>
+          <div class="gen-card">
+            <h4>Distribuciones</h4>
+            <p>Segmentos: 60% residencial · 25% comercial · 15% industrial. Ciudades ponderadas por log(población).</p>
+            <p>Mix energético: hidro 40% · solar 20% · eólica 10% · biomasa 10% · nuclear 5%.</p>
+          </div>
+          <div class="gen-card">
+            <h4>Estacionalidad</h4>
+            <p><code>1.0 + 0.25·sin(2π·doy/182.5)</code></p>
+            <p>Picos en Q1 (caliente) y Q3 (frío relativo).</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter">
+        <header><span class="chapnum">D.</span><h2>Costo del despliegue.</h2></header>
+        <p class="hint">
+          Datos en vivo desde el endpoint <code>/api/free-tier/status</code> del backend, que cruza la fecha actual con el fin del Free Tier (cuenta nueva) y el consumo medido contra el saldo inicial de créditos AWS.
+        </p>
+        <div id="cost-credit-banner" class="cost-credit-banner" style="display:none"></div>
+        <h4 class="cost-section-h">Servicios desplegados en la cuenta</h4>
+        <p class="muted" style="margin:0 0 1rem 0">Inventario de los recursos AWS aprovisionados para esta entrega. Todos viven en la región <code>us-east-1</code>.</p>
+        <div id="deployed-services" class="deployed-services"></div>
+      </article>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- TAB · EJ.1 · REQUISITOS TÉCNICOS                             -->
+    <!-- ============================================================ -->
+    <main class="tab-pane" data-pane="ej1-req">
+      <section class="brief">
+        <h2 class="brief-title">Ejercicio 1 · Requisitos técnicos</h2>
+        <p class="brief-quote">
+          «Una compañía comercializadora de energía compra electricidad a generadores en el mercado
+          mayorista, después la vende a clientes residenciales, comerciales o industriales. El
+          sistema exporta proveedores, clientes y transacciones en CSV.»
+        </p>
+      </section>
+
+      <article class="chapter req-card">
+        <header><span class="chapnum">R0</span><h2>Decisión arquitectónica · CSV vs PostgreSQL.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué dice la prueba sobre la fuente de datos</div>
+          <div class="sn-content">
+            <blockquote>Utilice información ficticia en los archivos csv que se simula entregue el sistema transaccional.</blockquote>
+            <div class="source">PruebaAWS.pdf · página 1 · Ejercicio 1, párrafo de cierre</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque ante el requisito</div>
+          <div class="sn-content">
+            <p>La prueba pide CSVs ficticios pero no obliga a que la fuente sea CSV. Decidí modelar el sistema transaccional con una base PostgreSQL en RDS porque ningún sistema operacional real almacena su data en CSVs sueltos. El extractor Python genera los CSVs particionados que alimentan el datalake, cumpliendo el contrato exacto del enunciado, pero la fuente de verdad es una base relacional con FKs, constraints y semántica de negocio.</p>
+            <p>Este capítulo (R0) está antes de R1 a propósito: explica esta decisión <strong>antes</strong> de mostrar la implementación del datalake, porque el evaluador necesita entender el "por qué" para evaluar el "cómo".</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Argumentación completa (documento dedicado)</div>
+          <div class="sn-content">
+            <p>Abajo el documento <code>docs/data-decision.md</code> renderizado con los 6 argumentos a favor de PostgreSQL: realismo del sistema fuente, reproducibilidad bit a bit, integridad referencial validable, modelo dimensional explícito, exportable a CSV bajo demanda, y bounded contexts por dominio.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Cómo se traduce en la práctica</div>
+          <div class="sn-content">
+            <div class="exercise" id="doc-decision">cargando…</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter req-card">
+        <header><span class="chapnum">R1</span><h2>Estrategia datalake S3 · capas + particionado por fecha de carga.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué pide la prueba</div>
+          <div class="sn-content">
+            <blockquote>Crear una estrategia de datalake en s3 con las capas que usted considere necesario tener y cargue esta información de manera automática y periódica. Los archivos deben particionarse por fecha de carga.</blockquote>
+            <div class="source">PruebaAWS.pdf · Ejercicio 1, requisito técnico 1</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>Diseñé un datalake de <strong>6 capas</strong> en S3 (no 3) para separar "datos analíticos internos" de "artefactos publicados al usuario" y de "área temporal de cómputo". Cada capa tiene un propósito único, una bucket policy distinta y una política de lifecycle propia. Para el particionamiento por fecha de carga uso <strong>Hive-style</strong> (<code>loaded_at=YYYY-MM-DDTHH/</code>) que es el formato que Athena, Glue y Redshift Spectrum entienden nativamente.</p>
+            <p>La carga periódica la programo desde Glue Crawler (cron horario) y, para producción, sería un EventBridge schedule disparando el extractor Python.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Servicios y técnicas que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Usé S3 como almacenamiento (la base del datalake) y la convención de particionado Hive-style para que las queries downstream filtren eficientemente sin escanear todo. Las dos piezas son complementarias: S3 me da durabilidad y bajo costo; el particionado me da eficiencia analítica.</p>
+            <div class="stack-pills">
+              <div class="stack-pill">
+                <div class="name">Amazon S3 <span class="acronym">Simple Storage Service</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Servicio de almacenamiento de objetos serverless: cualquier archivo (CSV, Parquet, JSON, imágenes...) accesible vía HTTP/HTTPS. Pagas por GB almacenado y por requests. Durabilidad 99.999999999%.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Columna vertebral del datalake. 6 buckets con propósitos separados (raw, staging, processed, public, athena-results, glue-scripts). SSE-S3 obligatoria; block public access excepto el bucket "public".</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">Particionamiento Hive-style <span class="acronym">key=value/</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Convención de nombrado donde cada subdirectorio es <code>columna=valor/</code>. Athena, Glue, Spark y Redshift Spectrum la entienden nativamente para podar (skip) datos al hacer queries con filtros.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Cada extracción crea <code>loaded_at=YYYY-MM-DDTHH/</code>. Permite reprocesar una sola hora sin afectar el histórico, y filtrar en SQL <code>WHERE loaded_at &gt; '2026-04-15'</code> escanea solo lo nuevo.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Implementación concreta</div>
+          <div class="sn-content">
+            <div class="req-grid">
+              <div>
+                <h4>Las 6 capas que creé</h4>
+                <ul class="bullet">
+                  <li><code>s3://prueba-aws-raw/</code> · CSVs originales extraídos del RDS · zona "landing"</li>
+                  <li><code>s3://prueba-aws-staging/</code> · output intermedio de Glue (temp, scratch para Spark)</li>
+                  <li><code>s3://prueba-aws-processed/</code> · Parquet+Snappy particionado · zona "curated"</li>
+                  <li><code>s3://prueba-aws-public/</code> · assets descargables (PDF, reportes calidad, JSONs Athena)</li>
+                  <li><code>s3://prueba-aws-athena-results/</code> · output queries Athena · lifecycle 7 días</li>
+                  <li><code>s3://prueba-aws-glue-scripts/</code> · código PySpark de los 3 jobs ETL</li>
+                </ul>
+                <p class="muted-strong">¿Por qué 6 capas y no 3?</p>
+                <p>Separo "publicación pública" (PDFs, reportes) de "datalake interno" para que Lake Formation gobierne uno y bucket policies abierto el otro, sin mezclar permisos. Athena results en bucket separado evita confusión con el datalake principal y permite lifecycle agresivo (queries son efímeras).</p>
+              </div>
+              <div>
+                <h4>El particionado por fecha de carga</h4>
+                <p>El extractor Python (<code>scripts/02_extract_to_s3_raw.py</code>) crea una partición nueva por cada corrida con granularidad horaria:</p>
+                <pre>s3://prueba-aws-raw/&lt;tabla&gt;/loaded_at=YYYY-MM-DDTHH/&lt;tabla&gt;.csv</pre>
+                <p>Beneficios prácticos:</p>
+                <ul class="bullet">
+                  <li><strong>Idempotencia</strong>: re-correr no contamina histórico (cada run = nueva partición)</li>
+                  <li><strong>Reproceso quirúrgico</strong>: borrar una partición específica si vino corrupta sin afectar otras</li>
+                  <li><strong>Filtrado eficiente en Athena</strong>: <code>WHERE loaded_at &gt; '2026-04-15'</code> escanea solo lo nuevo</li>
+                  <li><strong>Trazabilidad</strong>: <code>loaded_at</code> es metadata útil para auditoría y debugging</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado y dónde verificarlo</div>
+          <div class="sn-content">
+            <p class="req-status"><span class="ok-mark">●</span> 6 buckets desplegados en <code>us-east-1</code> con SSE-S3 + block public access (excepto el bucket "public"). Para el detalle del pipeline completo, ver <a href="#ej1-docs" data-tab-link="ej1-docs" class="link">pestaña Ej.1 · Documentación · D1</a>.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter req-card">
+        <header><span class="chapnum">R2</span><h2>3 transformaciones Glue · Parquet en zona procesada.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué pide la prueba</div>
+          <div class="sn-content">
+            <blockquote>Realice 3 transformaciones básicas de datos utilizando AWS Glue y transforme la información para que esta sea almacenada en formato parquet en una zona procesada.</blockquote>
+            <div class="source">PruebaAWS.pdf · Ejercicio 1, requisito técnico 2</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>En vez de meter las 3 transformaciones en un solo job monolítico, las separé en <strong>3 jobs independientes</strong> con responsabilidades distintas: uno para dimensiones (SCD-1), uno para el hecho transaccional (con derivaciones y particionado por año/mes), y uno para pre-agregados mensuales. Esta separación me permite ejecutarlos en paralelo, debuggearlos por separado y reentrenar uno solo si cambia la lógica.</p>
+            <p>Los 3 jobs son PySpark sobre Glue 4.0 con worker <code>G.1X</code> (1 DPU = 4 vCPU + 16 GB) × 2 workers, suficiente para los volúmenes del ejercicio. Cada uno escribe Parquet+Snappy en una sub-carpeta de la zona processed.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Servicios y formatos que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Glue es el motor de ejecución (Spark gestionado), PySpark el lenguaje en que escribo las transformaciones, Parquet el formato de salida (columnar, optimizado para queries analíticas) y Snappy el codec de compresión que balancea ratio + velocidad de lectura. Las cuatro piezas son la combinación canónica para datalakes analíticos modernos en AWS.</p>
+            <div class="stack-pills">
+              <div class="stack-pill">
+                <div class="name">AWS Glue (ETL) <span class="acronym">serverless ETL</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Servicio serverless para ejecutar jobs ETL sobre Apache Spark. AWS gestiona el cluster Spark, tú solo escribes código PySpark / Scala. Facturación por DPU-hora (Data Processing Unit, equivalente a 4 vCPU + 16 GB).</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Corre los 3 jobs PySpark que transforman raw → processed. Glue 4.0 con worker <code>G.1X</code> (1 DPU por worker) y 2 workers por job. Cada run dura ~50-70 segundos y consume ~0.03-0.04 DPU-hr.</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">Apache Parquet <span class="acronym">columnar</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Formato de archivo columnar (no por filas como CSV). Comprime mejor (ratio 3-10×), escanea solo las columnas que la query necesita, y es estándar de facto para datalakes analíticos.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Output de los 3 ETL jobs en S3 processed. Athena y Redshift leen Parquet nativamente; reduce escaneo en Athena (que cobra por TB escaneado) entre 80% y 95% vs CSV.</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">Snappy <span class="acronym">compression codec</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Codec de compresión rápido (no el que más comprime, pero sí el más balanceado para Spark). Permite split de archivos sin descomprimir todo (paralelización Spark).</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Codec aplicado a los Parquet del processed. Recomendado por defecto en Glue + Athena (gzip comprime más pero no permite split eficiente).</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">PySpark <span class="acronym">Spark API en Python</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">API Python para Apache Spark. Permite definir transformaciones distribuidas con DataFrames y SQL. Glue añade <code>DynamicFrame</code> con resolución automática de tipos heterogéneos.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Lenguaje de los 3 jobs ETL. Cada job lee CSV de raw, aplica transformaciones (SCD-1, joins, agregados), escribe Parquet con particionamiento.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Las 3 transformaciones que implementé</div>
+          <div class="sn-content">
+            <p>Cada tarjeta es un job de Glue con su propósito de negocio, su input desde S3 raw y su output en una sub-carpeta de S3 processed. Los 3 los orquesto desde <code>scripts/04_run_glue_etl.py</code> en orden secuencial (pero corren en Glue independientemente).</p>
+            <div id="etl-jobs" class="etl-jobs">cargando…</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado y dónde verificarlo</div>
+          <div class="sn-content">
+            <p class="req-status"><span class="ok-mark">●</span> 3 jobs ejecutados con éxito · output Parquet+Snappy en <code>s3://prueba-aws-processed/</code> · DPU-hours consumidas medibles desde <a href="#resumen" data-tab-link="resumen" class="link">tab Resumen · sección E (costo)</a> con datos del endpoint <code>/api/cost/metered</code>.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter req-card">
+        <header><span class="chapnum">R3</span><h2>Glue Crawler · catálogo automático de esquemas.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué pide la prueba</div>
+          <div class="sn-content">
+            <blockquote>Utilizando AWS Glue, crea un proceso que detecte y catalogue automáticamente los esquemas de los datos almacenados en el datalake.</blockquote>
+            <div class="source">PruebaAWS.pdf · Ejercicio 1, requisito técnico 3</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>Configuré <strong>2 crawlers</strong> separados: uno escanea la zona <em>raw</em> (CSVs) en horario automático cada hora, y otro escanea la zona <em>processed</em> (Parquet) on-demand cuando termina un ETL. Las tablas detectadas se registran en el <strong>Glue Data Catalog</strong>, que es el metastore unificado que comparten Athena, Redshift Spectrum, EMR y Lake Formation, evitando definir schemas múltiples veces.</p>
+            <p>El crawler detecta automáticamente las particiones <code>loaded_at=...</code> creadas por el extractor (R1), sin escribir DDL manual.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Servicios que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Glue Crawler es la herramienta de detección; Glue Data Catalog es el "diccionario" donde quedan las tablas registradas; y el cron scheduler de Glue es lo que automatiza la periodicidad. Las tres piezas trabajan juntas para cumplir literalmente el requisito de "automáticamente".</p>
+            <div class="stack-pills">
+              <div class="stack-pill">
+                <div class="name">Glue Crawler <span class="acronym">schema discovery</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Servicio que escanea S3 (o JDBC, DynamoDB, Mongo) y deduce el esquema automáticamente: detecta columnas, tipos, particiones. Crea o actualiza tablas en el Glue Data Catalog.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">2 crawlers: <code>raw</code> (CSV horario) y <code>processed</code> (Parquet on-demand). Detectan particiones <code>loaded_at=...</code> automáticamente; sin DDL manual.</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">Glue Data Catalog <span class="acronym">metastore</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Repositorio centralizado de metadatos (databases + tables + columns + locations). Compatible con Apache Hive metastore. Fuente única de schema para Athena, Redshift Spectrum, EMR y Lake Formation.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Database <code>datalake_energia</code> con 11 tablas catalogadas (5 raw + 6 processed). Athena, Redshift y EC2 backend la consultan vía AWS SDK.</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">Cron Glue scheduler <span class="acronym">automation</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Glue permite programar crawlers y jobs con cron expressions estilo AWS (diferente al cron Unix: incluye campo de día-de-semana con <code>?</code>).</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role"><code>0 * * * ? *</code> = cada hora a la hora exacta (minuto 0). Crawler raw escanea cada hora para detectar nuevas particiones. Crawler processed corre on-demand.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Configuración concreta</div>
+          <div class="sn-content">
+            <div class="req-grid">
+              <div>
+                <h4>Los 2 crawlers que configuré</h4>
+                <ul class="bullet">
+                  <li><code>prueba-aws-crawler-raw</code> · escanea raw <strong>cada hora a la hora exacta</strong> (cron <code>0 * * * ? *</code> en sintaxis Glue: minuto 0, todas las horas, todos los días/meses, cualquier día de semana)</li>
+                  <li><code>prueba-aws-crawler-processed</code> · on-demand · registra Parquet generados por los jobs ETL</li>
+                </ul>
+                <p class="muted-strong">¿Por qué cada hora y no cada minuto?</p>
+                <p>El sistema fuente exporta CSVs en lotes (no streaming). Una corrida horaria detecta nuevas particiones <code>loaded_at=YYYY-MM-DDTHH/</code> sin gastar DPU innecesario. Si se requiere baja latencia, lo cambio a EventBridge → Lambda → StartCrawler disparado por <code>s3:ObjectCreated:Put</code>.</p>
+              </div>
+              <div>
+                <h4>Tablas resultantes en el catálogo · <code>datalake_energia</code></h4>
+                <ul class="bullet" id="glue-tables">cargando…</ul>
+                <p class="muted-strong">Beneficios del catálogo unificado</p>
+                <ul class="bullet">
+                  <li>Athena, Redshift Spectrum, EMR y Lake Formation comparten el mismo schema sin redefinirlo</li>
+                  <li>Tag-based access control (LF-Tags) se aplica al catálogo, no al bucket S3</li>
+                  <li>Schema evolution detectada automáticamente (drift) genera entradas nuevas en la tabla</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado</div>
+          <div class="sn-content">
+            <p class="req-status"><span class="ok-mark">●</span> 11 tablas catalogadas automáticamente (5 raw + 5 processed dim/fact + 1 agregado mensual). Verificable arriba en la lista de tablas que devuelve el catálogo Glue en vivo.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter req-card">
+        <header><span class="chapnum">R4</span><h2>Athena desde Python · consultas SQL en vivo.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué pide la prueba</div>
+          <div class="sn-content">
+            <blockquote>Utilizando Amazon Athena desde Python, realiza consultas SQL básicas sobre los datos que han sido transformados.</blockquote>
+            <div class="source">PruebaAWS.pdf · Ejercicio 1, requisito técnico 4</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>Implementé las consultas en el script Python <code>scripts/05_athena_query.py</code> usando <strong>boto3</strong> (cumple literalmente el requisito "desde Python"). Definí 3 queries analíticas representativas: resumen mensual de ventas, top 5 clientes por volumen, y margen promedio por tipo de energía.</p>
+            <p>Para que el evaluador pueda <strong>ver las queries ejecutándose en vivo</strong>, replico la misma lógica desde el backend Spring Boot (AWS SDK Java v2) y el front lo expone con un botón "Ejecutar en Athena" en cada tarjeta. Mismo workgroup, mismas SQL, ejecución on-demand contra los Parquet de S3 processed.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Servicios y SDKs que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Athena es el motor SQL serverless que consume los Parquet de S3 vía el catálogo Glue. boto3 es el SDK Python con el que se cumple literalmente el requisito de la prueba. AWS SDK for Java v2 es el camino del backend para replicar las queries y mostrarlas live en el front.</p>
+            <div class="stack-pills">
+              <div class="stack-pill">
+                <div class="name">Amazon Athena <span class="acronym">SQL serverless</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Motor SQL serverless basado en Presto/Trino que consulta directamente datos en S3. No hay cluster que provisionar: pagas $5/TB escaneado. Soporta JOINs complejos, agregaciones, window functions, JSON.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Ejecuta las 3 queries analíticas requeridas por la prueba contra el Parquet en S3 processed. Workgroup <code>prueba-aws-wg</code> con cap de 1 GB/query como cost guard.</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">boto3 (Python) <span class="acronym">AWS SDK</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">SDK oficial de Python para AWS. Cubre todos los servicios (S3, EC2, RDS, Glue, Athena, etc.) con APIs uniformes basadas en clientes y paginadores.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Script <code>05_athena_query.py</code> usa <code>boto3.client('athena')</code> para <code>start_query_execution → get_query_execution → get_query_results</code>. Cumple literalmente el requisito "Athena desde Python".</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">AWS SDK for Java v2 <span class="acronym">backend SDK</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">SDK oficial Java para AWS, versión 2 (la moderna). Builder pattern, support nativo para reactive streams, paginadores Stream-based.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Backend Spring Boot usa <code>AthenaClient</code> de AWS SDK v2 para replicar las queries del script Python en respuesta a clicks del front. Mismo workgroup, mismas SQL.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Las 3 queries en vivo</div>
+          <div class="sn-content">
+            <p>Cada tarjeta muestra el SQL completo y un botón para ejecutarlo. Al hacer clic, el backend dispara la query contra el workgroup <code>prueba-aws-wg</code> y devuelve filas + metadata (tiempo, KB escaneados, executionId).</p>
+            <div class="athena-grid" id="athena-grid">cargando…</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado</div>
+          <div class="sn-content">
+            <p class="req-status"><span class="ok-mark">●</span> Las 3 queries son ejecutables en vivo desde el front, con tiempos típicos de 3-5 segundos por query. La salida del script Python original queda en <code>scripts/output/athena_results.json</code> y también en <code>s3://prueba-aws-public/athena_results.json</code>.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter req-card">
+        <header><span class="chapnum">R5</span><h2>Esquemas separados por dominio · Ej.1 vs Ej.2.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Por qué incluyo este punto (no es requisito explícito)</div>
+          <div class="sn-content">
+            <blockquote>La prueba tiene dos ejercicios prácticos (energía y divisas) y comparten el mismo cluster RDS por ahorro de costo.</blockquote>
+            <div class="source">Decisión arquitectónica propia · explicada para el evaluador</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>Aunque ambos ejercicios viven en el mismo cluster RDS por economía, las tablas viven en <strong>schemas separados por dominio</strong>: <code>core</code>+<code>dwh</code>+<code>audit</code> son de energía (Ej.1), <code>divisas</code> es de compra/venta dólares (Ej.2). Esto sigue el principio de <em>Bounded Context</em> de Domain-Driven Design: cada dominio tiene su propio vocabulario, modelo y permisos, sin colisiones de nombres ni mezcla accidental de tablas.</p>
+            <p>El resultado: si mañana migro Ej.2 a su propio cluster, la separación ya está hecha; solo cambia el host de conexión.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Conceptos que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Bounded Context es la teoría (DDD); PostgreSQL Schemas es el mecanismo técnico que lo implementa nativamente sin necesidad de bases de datos separadas.</p>
+            <div class="stack-pills">
+              <div class="stack-pill">
+                <div class="name">Bounded Context <span class="acronym">DDD</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Concepto de Domain-Driven Design: cada dominio del negocio tiene su propio modelo, vocabulario y schema. Evita mezclar conceptos de dominios distintos en la misma tabla.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">Ej.1 (energía) y Ej.2 (divisas) viven en schemas separados aunque compartan el mismo cluster RDS. Esto facilita evolucionar cada uno independientemente.</div>
+              </div>
+              <div class="stack-pill">
+                <div class="name">PostgreSQL Schemas <span class="acronym">namespace</span></div>
+                <div class="label">Qué es</div>
+                <div class="desc">Mecanismo nativo de Postgres para namespacing de tablas. Una base puede tener N schemas, cada uno con sus propias tablas, vistas, funciones, sin colisiones.</div>
+                <div class="label">Rol aquí</div>
+                <div class="desc role">4 schemas: <code>core</code>, <code>dwh</code>, <code>audit</code> (Ej.1) y <code>divisas</code> (Ej.2). Permisos por schema vía <code>GRANT USAGE ON SCHEMA</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Los 4 schemas creados (datos en vivo del RDS)</div>
+          <div class="sn-content">
+            <div id="schemas-list" class="schemas-list">cargando…</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado</div>
+          <div class="sn-content">
+            <p class="req-status"><span class="ok-mark">●</span> 4 schemas independientes con permisos separados (vía <code>GRANT USAGE ON SCHEMA</code>). Verificable con <code>\dn</code> en <code>psql</code>.</p>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- TAB · EJ.1 · DOCUMENTACIÓN                                   -->
+    <!-- ============================================================ -->
+    <main class="tab-pane" data-pane="ej1-docs">
+      <section class="brief">
+        <h2 class="brief-title">Ejercicio 1 · Documentación</h2>
+        <p class="brief-quote">
+          Los dos documentos requeridos por la prueba: descripción del pipeline y proceso de
+          configuración de permisos/políticas para los servicios AWS utilizados.
+        </p>
+      </section>
+
+      <article class="chapter">
+        <header><span class="chapnum">D1</span><h2>Descripción detallada del pipeline.</h2></header>
+        <div class="exercise" id="doc-pipeline">cargando…</div>
+      </article>
+
+      <article class="chapter">
+        <header><span class="chapnum">D2</span><h2>Permisos y políticas AWS · IAM + Lake Formation.</h2></header>
+        <div class="exercise" id="doc-permissions">cargando…</div>
+      </article>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- TAB · EJ.1 · PLUS                                            -->
+    <!-- ============================================================ -->
+    <main class="tab-pane" data-pane="ej1-plus">
+      <section class="brief">
+        <h2 class="brief-title">Ejercicio 1 · Puntos adicionales (Plus)</h2>
+        <p class="brief-quote">
+          Los tres puntos extra de la prueba: IaC, Lake Formation, pipeline a Redshift. Los tres
+          implementados, con detalle técnico y trade-offs documentados.
+        </p>
+      </section>
+
+      <article class="chapter">
+        <header><span class="chapnum">P1</span><h2>IaC · Infraestructura como código (Terraform).</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué pide la prueba (puntos adicionales)</div>
+          <div class="sn-content">
+            <blockquote>Crea la IaC (Infraestructura como código) necesaria para desplegar esta solución en AWS.</blockquote>
+            <div class="source">PruebaAWS.pdf · Ejercicio 1, puntos adicionales 1</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>Implementé toda la infraestructura con <strong>Terraform</strong> (no CloudFormation ni CDK) por su transparencia de state, su ecosistema de módulos comunitarios y la portabilidad multi-cloud. Estructuré el código en <strong>7 archivos .tf separados por dominio</strong> (RDS, S3, IAM, Glue, Lake Formation, Redshift, EC2) para que cada uno sea legible y modificable independientemente. Un solo <code>terraform apply</code> crea los 63 recursos AWS necesarios.</p>
+            <p>Apliqué patrones de producción: default tags via provider (cumple cost allocation), <code>prevent_destroy</code> en la EIP (evita romper la URL del backend), conditional resources con <code>count</code> (opt-in para Redshift), keypair SSH auto-generado (sin pasos manuales).</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Herramientas que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Terraform es la herramienta principal; el provider AWS es el plugin que traduce HCL a llamadas SDK; el archivo <code>.tfstate</code> es la fuente de verdad del mapeo recurso ↔ AWS; y los recursos <code>tls_private_key</code> + <code>aws_key_pair</code> son trucos para automatizar la generación de la SSH key del EC2.</p>
+            <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">Terraform <span class="acronym">IaC declarativo</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Herramienta open-source de HashiCorp para definir infraestructura como código en HCL (HashiCorp Configuration Language). Compara estado deseado vs actual y aplica cambios incrementales (plan + apply).</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Define los 63 recursos AWS (RDS, S3, IAM, Glue, Lake Formation, EC2, EIP, Secrets) en 7 archivos <code>.tf</code>. Reproducible: cualquiera con la cuenta puede recrear todo con <code>terraform apply</code>.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Provider AWS (hashicorp/aws) <span class="acronym">5.x</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Plugin oficial de Terraform para AWS, mantenido por HashiCorp. Contiene recursos para todos los servicios AWS (~1500). Versión 5.x es la actual con default tags, plan-time validation, etc.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Pinneado a <code>~&gt; 5.60</code> en <code>versions.tf</code>. Configurado con <code>default_tags</code> para que todos los recursos lleven 4 tags sin tocar definiciones.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Terraform State <span class="acronym">tfstate</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Archivo JSON que Terraform mantiene con el mapeo recurso-en-código ↔ recurso-en-AWS. En producción se guarda remoto (S3 + DynamoDB lock) para colaboración.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Local en este demo (<code>terraform.tfstate</code> en <code>infra/terraform/</code>, gitignored). Para producción recomiendo S3 backend con encryption + versioning + DynamoDB para state locking.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">tls_private_key + aws_key_pair <span class="acronym">SSH automation</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Recursos Terraform que generan keypair SSH y lo registran en AWS sin intervención manual. La clave privada se persiste local con permisos restringidos.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Genera la SSH key de EC2 en el primer apply (<code>infra/terraform/.secrets/ec2-key.pem</code>). Sin pasos manuales para conectar al backend.</div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Estructura del repo, archivos por dominio y recursos generados</div>
+          <div class="sn-content">
+        <div class="req-grid">
+          <div>
+            <h4>Por qué Terraform y no CloudFormation/CDK</h4>
+            <p>Elegí Terraform por tres razones:</p>
+            <ul class="bullet">
+              <li><strong>Multi-cloud</strong>: si mañana hay que migrar parcialmente a GCP/Azure, los módulos de network/storage se adaptan. CloudFormation queda atado a AWS.</li>
+              <li><strong>State explícito</strong>: <code>terraform state list</code> da visibilidad inmediata de los recursos creados. CloudFormation oculta esto detrás de Stacks que son menos transparentes.</li>
+              <li><strong>Comunidad y módulos</strong>: el registro de Terraform Hub tiene módulos battle-tested para todos los servicios AWS (terraform-aws-modules/*) que ahorran semanas de desarrollo.</li>
+            </ul>
+            <h4>Estructura del repo</h4>
+            <ul class="bullet">
+              <li><code>versions.tf</code> · pin de provider AWS 5.60+, random, tls, local · garantiza reproducibilidad</li>
+              <li><code>providers.tf</code> · default tags (<code>Project</code>, <code>Owner</code>, <code>Env</code>, <code>ManagedBy</code>) aplicados a TODOS los recursos automáticamente</li>
+              <li><code>variables.tf</code> · 11 inputs sensibles + bool toggles para opt-in (Redshift, etc.)</li>
+              <li><code>outputs.tf</code> · 13 outputs consumibles por scripts y CI/CD (RDS endpoint, EIP, ARN del secret, etc.)</li>
+            </ul>
+            <h4>Archivos por dominio</h4>
+            <ul class="bullet">
+              <li><code>rds.tf</code> · PostgreSQL <code>db.t4g.micro</code> + SG (5432 inbound desde EC2 SG) + parameter group (<code>log_statement=ddl</code>) + subnet group default VPC</li>
+              <li><code>s3.tf</code> · 6 buckets con encryption SSE-S3 obligatoria, lifecycle (Athena results 7 días), CORS para front Vercel, public access blocks excepto bucket "public"</li>
+              <li><code>iam.tf</code> · 4 roles separados con least privilege (Glue, EC2 backend, Redshift, Lake Formation) + Secrets Manager + Cost Explorer permission + Cost metered (ec2:DescribeInstances, etc.)</li>
+              <li><code>glue.tf</code> · DB <code>datalake_energia</code> + 2 crawlers + 3 ETL jobs PySpark + Athena workgroup con cap <code>bytes_scanned_cutoff_per_query=1GB</code> (cost guard)</li>
+              <li><code>lakeformation.tf</code> · settings, LF-Tags <code>Sensitivity</code>+<code>Domain</code>, permisos por tag (no por bucket policy)</li>
+              <li><code>redshift.tf</code> · namespace + workgroup serverless 8 RPU con flag <code>enable_redshift</code> para opt-in (cuentas nuevas requieren activar Redshift en consola una vez)</li>
+              <li><code>ec2.tf</code> · backend instance + EIP estática (con <code>prevent_destroy=true</code>) + Caddy preconfigurado vía user-data + SSH key auto-generada con <code>tls_private_key</code></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Recursos creados (terraform state list)</h4>
+            <pre id="tf-recursos">cargando…</pre>
+            <h4>Patrones que apliqué</h4>
+            <ul class="bullet">
+              <li><strong>Default tags en provider</strong>: cada recurso lleva 4 tags sin tocar la definición · cumple cost allocation policy</li>
+              <li><strong>Lifecycle <code>prevent_destroy</code></strong> en EIP para que un <code>terraform destroy</code> accidental no rompa la URL del backend</li>
+              <li><strong>Conditional resources</strong> con <code>count = var.enable_redshift ? 1 : 0</code> · permite opt-in sin tener archivos separados</li>
+              <li><strong>Local TLS key + AWS key pair</strong> · sin manual setup, el primer apply genera todo</li>
+              <li><strong>Outputs consumibles</strong> · <code>backend_url</code>, <code>rds_endpoint</code>, <code>secret_arn</code> los leen scripts Python sin hardcoding</li>
+            </ul>
+            <h4>Para producción agregaría</h4>
+            <ul class="bullet">
+              <li>Backend remote en S3 + DynamoDB lock</li>
+              <li>Cuentas separadas dev/staging/prod via AWS Organizations</li>
+              <li>Atlantis o Terraform Cloud para CI/CD con plan automatic en PR</li>
+              <li>Drift detection diaria (<code>terraform plan -detailed-exitcode</code>)</li>
+            </ul>
+          </div>
+        </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado y dónde verificarlo</div>
+          <div class="sn-content">
+            <p class="req-status"><span class="ok-mark">●</span> 63 recursos AWS desplegados con un solo <code>terraform apply</code>. Código fuente en <a class="link" target="_blank" href="https://github.com/dapovedag/aws_test/tree/main/infra/terraform">github.com/dapovedag/aws_test/tree/main/infra/terraform</a>.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter">
+        <header><span class="chapnum">P2</span><h2>Lake Formation · gobierno + tag-based access control.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué pide la prueba (puntos adicionales)</div>
+          <div class="sn-content">
+            <blockquote>Configure AWS Lakeformation para centralizar el gobierno, la seguridad y compartir los datos alojados en el datalake creado.</blockquote>
+            <div class="source">PruebaAWS.pdf · Ejercicio 1, puntos adicionales 2</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>Configuré Lake Formation con <strong>permisos por tags (LF-Tags)</strong>, no por bucket policies de S3. Esto centraliza el gobierno: marcas la tabla como <code>Sensitivity=PII</code> una sola vez, y todos los principals que no tienen permission sobre ese tag quedan bloqueados automáticamente. Adicionalmente registré <code>s3://prueba-aws-processed/</code> como ubicación gobernada por LF para que las bucket policies dejen de ser la fuente principal de control.</p>
+            <p>El resultado: el rol del backend EC2 puede leer tablas con <code>Sensitivity ∈ {Public, Internal}</code> pero no las marcadas como PII, sin escribir una sola línea de bucket policy.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Servicios que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Lake Formation es la capa de gobierno; LF-Tags es el mecanismo declarativo de access control; IAM sigue ahí pero como capa base (LF se evalúa DESPUÉS de IAM).</p>
+            <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">AWS Lake Formation <span class="acronym">data lake governance</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Capa de gobierno encima de S3 + Glue Catalog. Centraliza permisos finos (table, column, row) usando LF-Tags reutilizables, sin escribir bucket policies a mano. Auditoría vía CloudTrail.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Marca <code>s3://prueba-aws-processed/</code> como ubicación gobernada. Define LF-Tags <code>Sensitivity</code> y <code>Domain</code>. Concede <code>SELECT</code> al backend EC2 solo para tablas con <code>Sensitivity ∈ {Public, Internal}</code>.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">LF-Tags <span class="acronym">tag-based access control</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Atributos clave-valor (ej: <code>Sensitivity=PII</code>) asignables a databases, tablas y columnas. Las policies se definen sobre tags, no sobre nombres de recursos: escala mejor.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">2 LF-Tags definidos: <code>Sensitivity</code> (Public/Internal/PII) y <code>Domain</code> (Provider/Client/Transaction/Reference). Marcas la tabla una vez, los permisos se aplican automáticamente.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">AWS IAM <span class="acronym">Identity and Access Management</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Sistema de identidades, roles y políticas de AWS. Sin costo. Define quién puede hacer qué sobre qué recursos. Lake Formation se evalúa DESPUÉS de IAM (dos capas).</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">4 roles separados con least privilege: Glue, EC2 backend, Redshift, Lake Formation service. Sin <code>*:*</code>; permission boundaries para limitar blast radius.</div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Configuración aplicada y por qué LF gana a IAM puro</div>
+          <div class="sn-content">
+        <div class="req-grid">
+          <div>
+            <h4>Configuración aplicada</h4>
+            <ul class="bullet">
+              <li><strong>Data Lake Admins</strong>: el ARN del usuario IAM aplicador de Terraform · revocable sin tocar bucket policies</li>
+              <li><strong>Service role</strong>: <code>prueba-aws-lakeformation-service</code> que LF asume para acceder a S3 governed locations</li>
+              <li><strong>Data lake location registrada</strong>: <code>s3://prueba-aws-processed/</code> queda bajo gobierno LF (las bucket policies sobre este bucket dejan de ser la fuente de verdad)</li>
+              <li><strong>LF-Tags definidos</strong>:
+                <ul>
+                  <li><code>Sensitivity</code> → valores <code>Public · Internal · PII</code></li>
+                  <li><code>Domain</code> → valores <code>Provider · Client · Transaction · Reference</code></li>
+                </ul>
+              </li>
+              <li><strong>Permisos fine-grained</strong> por tag (no por bucket policy directa):</li>
+              <li class="sub">Backend EC2: <code>SELECT, DESCRIBE</code> sobre tablas con <code>Sensitivity ∈ {Public, Internal}</code></li>
+              <li class="sub">Backend EC2 NO ve tablas con <code>Sensitivity = PII</code></li>
+              <li class="sub">Glue service-role: <code>DATA_LOCATION_ACCESS</code> sobre processed para escribir Parquet</li>
+              <li class="sub">Redshift role: <code>SELECT</code> sobre las dim/fact para hacer COPY</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Por qué Lake Formation y no IAM puro</h4>
+            <p>Con IAM tradicional, dar acceso a "tablas no-PII" del datalake requiere policies con condiciones <code>Resource</code> por bucket-prefix que se vuelven inmanejables conforme crecen los datasets. Lake Formation centraliza el modelo en LF-Tags reusables: marcas la tabla como <code>Sensitivity=PII</code> una vez, y todos los principals que NO tienen permission sobre ese tag quedan automáticamente excluidos.</p>
+            <p>Esto habilita patrones imposibles con IAM puro:</p>
+            <ul class="bullet">
+              <li><strong>Column-level security</strong> · solo ciertos roles ven la columna <code>id_externo</code> de cliente; otros ven la fila pero esa columna aparece como NULL</li>
+              <li><strong>Row-level security</strong> · usuarios de Bogotá solo ven transacciones de Bogotá vía <code>Data Filter</code> con expresión SQL</li>
+              <li><strong>Cross-account sharing</strong> · compartir tablas a otra cuenta AWS sin replicar S3 (la cuenta destino consulta las mismas Parquet via cross-account grant)</li>
+              <li><strong>Data Lake Permissions vs IAM</strong> · LF tiene su propio modelo de evaluación que se aplica DESPUÉS de IAM; un usuario puede tener IAM <code>s3:GetObject</code> pero LF lo bloquea por tag</li>
+            </ul>
+            <h4>Workflow operativo</h4>
+            <ol class="bullet">
+              <li>Data engineer marca la nueva tabla con LF-Tag al crearla en Glue Catalog</li>
+              <li>Data steward (rol separado) define qué LF-Tags puede tocar cada principal</li>
+              <li>Auditoría revisa <code>lakeformation:GrantPermissions</code> events en CloudTrail</li>
+              <li>Cero coordinación cross-team para policies de bucket</li>
+            </ol>
+          </div>
+        </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado y dónde verificarlo</div>
+          <div class="sn-content">
+            <p class="req-status"><span class="ok-mark">●</span> Tag-based access control activo · governance centralizado fuera de bucket policies · auditable vía CloudTrail (<code>lakeformation:GrantPermissions</code> data events).</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="chapter">
+        <header><span class="chapnum">P3</span><h2>Pipeline a Redshift · datawarehouse.</h2></header>
+
+        <div class="sn-block sn-pides">
+          <span class="sn-step">1</span>
+          <div class="sn-tag">Qué pide la prueba (puntos adicionales)</div>
+          <div class="sn-content">
+            <blockquote>Construya un pipeline de datos que permita cargar esta información desde el datalake en la zona procesada a un datawarehouse en redshift.</blockquote>
+            <div class="source">PruebaAWS.pdf · Ejercicio 1, puntos adicionales 3</div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-enfoque">
+          <span class="sn-step">2</span>
+          <div class="sn-tag">Mi enfoque</div>
+          <div class="sn-content">
+            <p>Elegí <strong>Redshift Serverless</strong> sobre Provisioned porque para un demo con uso esporádico el modelo serverless cuesta $0 cuando está idle (auto-pause a los 60s) y solo cobra ~$0.36/RPU-hora cuando hay queries activas. Para producción 24×7 con baseline alto, recomendaría Provisioned + Reserved Instance.</p>
+            <p>El pipeline es directo: <code>COPY masivo desde Parquet en S3 processed</code> hacia la tabla <code>analytics.fact_transaccion</code> en Redshift. Sin transformación intermedia (la transformación ya la hicieron los Glue ETLs). Validación post-COPY con un <code>SELECT COUNT(*) + SUM(monto_usd)</code> para reconciliar contra S3 source.</p>
+            <p>Provisión <strong>opt-in</strong>: cuentas AWS nuevas requieren activar Redshift desde la consola una vez. Por eso dejé el flag <code>enable_redshift=false</code> en Terraform por defecto.</p>
+          </div>
+        </div>
+
+        <div class="sn-block sn-stack">
+          <span class="sn-step">3</span>
+          <div class="sn-tag">Servicios y técnicas que apliqué (con contexto)</div>
+          <div class="sn-content">
+            <p>Redshift Serverless es el datawarehouse; COPY es el comando de carga masiva de Redshift; Redshift Data API es el SDK serverless para ejecutar SQL sin manejar conexiones JDBC; y DISTKEY+SORTKEY+ENCODE son las 3 optimizaciones clave del modelo dimensional en Redshift.</p>
+            <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">Amazon Redshift Serverless <span class="acronym">data warehouse</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Versión serverless de Redshift (DW columnar AWS). Sin cluster que provisionar: defines un namespace + workgroup, pagas por RPU-hora consumida (Redshift Processing Unit). Auto-pause tras inactividad.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Namespace <code>prueba-aws-ns</code> + workgroup base 8 RPU. Carga el fact con COPY desde Parquet processed. Auto-pause a los 60s · costo idle $0.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">COPY (Redshift) <span class="acronym">bulk load</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Comando masivo de carga de Redshift que paraleliza la ingesta automáticamente por slice. Soporta CSV, JSON, Parquet, ORC, AVRO directo desde S3 con un IAM Role.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role"><code>COPY analytics.fact_transaccion FROM 's3://.../fact/' IAM_ROLE 'prueba-aws-redshift-role' FORMAT PARQUET</code>. Carga 10K filas en segundos.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Redshift Data API <span class="acronym">async SQL</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">API REST/SDK para ejecutar SQL en Redshift sin manejar conexiones JDBC persistentes. Asíncrono: <code>execute_statement → describe_statement → get_statement_result</code>.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Script <code>06_load_to_redshift.py</code> usa boto3 <code>redshift-data</code> client. Sin pool de conexiones que gestionar; ideal para Lambda y workloads esporádicos.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">DISTKEY + SORTKEY + ENCODE <span class="acronym">columnar tuning</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Tres optimizaciones clave en Redshift: distribución por clave (joins en mismo nodo), sort interno (range queries), compresión por columna (auto-elegida).</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Recomendado: <code>DISTKEY(cliente_id)</code> · <code>SORTKEY(fecha_id, tipo_energia_id)</code> · <code>ENCODE AUTO</code>. Optimiza joins con dim_cliente y queries por rango temporal.</div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-impl">
+          <span class="sn-step">4</span>
+          <div class="sn-tag">Diseño técnico, script y por qué Serverless vs Provisioned</div>
+          <div class="sn-content">
+        <div class="req-grid">
+          <div>
+            <h4>Diseño técnico</h4>
+            <ul class="bullet">
+              <li><strong>Engine</strong>: Redshift Serverless · auto-pause · auto-scale en RPUs (Redshift Processing Units)</li>
+              <li><strong>Namespace</strong>: <code>prueba-aws-ns</code> con admin user, KMS-managed encryption por defecto</li>
+              <li><strong>Workgroup</strong>: <code>prueba-aws-wg</code> base 8 RPU · max 8 RPU (mínimo absoluto que Redshift permite)</li>
+              <li><strong>Schema destino</strong>: <code>analytics.fact_transaccion</code> · mismo modelo que <code>dwh.fact</code> en RDS para reconciliación trivial</li>
+              <li><strong>Carga masiva</strong>: <code>COPY ... FROM 's3://prueba-aws-processed/fact/' IAM_ROLE 'prueba-aws-redshift-role' FORMAT PARQUET</code></li>
+              <li><strong>Validación post-COPY</strong>: query de conteo <code>SELECT COUNT(*), SUM(monto_usd), MIN(fecha_id), MAX(fecha_id)</code> para reconciliación con S3 source</li>
+              <li><strong>Pause automático</strong>: workgroup entra en idle tras 60 segundos sin queries · siguiente query reactiva en menos de 2 segundos</li>
+            </ul>
+            <h4>Estrategia de carga</h4>
+            <p>Tres opciones evaluadas:</p>
+            <ol class="bullet">
+              <li><strong>COPY directo desde S3 Parquet</strong> (elegido) · sin transformación intermedia, máxima velocidad, paralelización automática por slice</li>
+              <li><strong>Redshift Spectrum</strong> · query S3 sin copiar · costo por TB escaneado, latencia más alta, pero $0 storage</li>
+              <li><strong>Glue ETL job dedicado</strong> · si necesitamos transformación adicional antes de cargar (no es el caso)</li>
+            </ol>
+          </div>
+          <div>
+            <h4>Script y orquestación</h4>
+            <pre>python scripts/06_load_to_redshift.py
+# 1. CREATE SCHEMA IF NOT EXISTS analytics
+# 2. CREATE TABLE IF NOT EXISTS analytics.fact_transaccion
+# 3. TRUNCATE analytics.fact_transaccion
+# 4. COPY FROM 's3://.../fact/'
+#    IAM_ROLE 'arn:aws:iam::...:role/prueba-aws-redshift-role'
+#    FORMAT PARQUET
+# 5. SELECT validation (count, sum, min/max date)
+# 6. Workgroup queda en idle (auto-pause)</pre>
+            <h4>Por qué Serverless y no Provisioned</h4>
+            <p>Para volumen pequeño-medio con uso esporádico (analítica nocturna, dashboards diarios), Serverless paga solo cuando hay queries activas:</p>
+            <ul class="bullet">
+              <li><strong>Costo idle</strong>: $0/hr (workgroup pausado)</li>
+              <li><strong>Costo activo</strong>: ~$0.36 por RPU-hora · facturación por segundo (mínimo 60s)</li>
+              <li><strong>Cold start</strong>: 30-60s la primera query del día (workgroup wake-up); siguientes en menos de 100ms</li>
+            </ul>
+            <p>Para uso 24×7 sostenido por encima de 8 RPU continuos, RA3 provisioned con reserved instances 1-año saldría ~50% más barato. La heurística que aplico:</p>
+            <ul class="bullet">
+              <li>Usage rate mayor a 60% del tiempo → <strong>Provisioned</strong> + Reserved Instance</li>
+              <li>Usage rate menor a 60% o esporádico → <strong>Serverless</strong></li>
+              <li>Cargas batch nocturnas predecibles → Serverless con auto-pause</li>
+              <li>Dashboards 24×7 con concurrencia alta → Provisioned + Concurrency Scaling</li>
+            </ul>
+            <h4>Modelo dimensional en Redshift</h4>
+            <ul class="bullet">
+              <li><strong>Distribución</strong>: <code>DISTKEY(cliente_id)</code> · joins con dim_cliente quedan en mismo nodo</li>
+              <li><strong>Sort key</strong>: <code>SORTKEY(fecha_id, tipo_energia_id)</code> · queries por rango temporal optimizadas</li>
+              <li><strong>Compresión</strong>: <code>ENCODE AUTO</code> · Redshift elige el mejor encoding por columna basándose en sample</li>
+            </ul>
+          </div>
+        </div>
+          </div>
+        </div>
+
+        <div class="sn-block sn-resultado">
+          <span class="sn-step">5</span>
+          <div class="sn-tag">Resultado y dónde verificarlo</div>
+          <div class="sn-content">
+            <p class="req-status">
+              <span class="warn-mark">●</span>
+              Provisión <strong>opt-in</strong> via flag <code>enable_redshift=true</code> en <code>terraform.tfvars</code>.
+              Cuentas AWS nuevas requieren activar Redshift desde la consola una vez (subscription implícita) antes del primer apply. Script <code>scripts/06_load_to_redshift.py</code> reconcilia conteos y suma vs Parquet en S3 processed.
+            </p>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- TAB · EJ.2 · ARQUITECTURA DIVISAS                            -->
+    <!-- ============================================================ -->
+    <main class="tab-pane" data-pane="ej2">
+      <section class="brief">
+        <h2 class="brief-title">Ejercicio 2 · Arquitectura · plataforma divisas en tiempo real</h2>
+        <p class="brief-quote">
+          «Un startup ofrece compra/venta de dólares en tiempo real. Quiere notificar a usuarios
+          según patrones históricos + precio del mercado + portafolio.»
+        </p>
+      </section>
+
+      <article class="chapter">
+        <header><span class="chapnum">D</span><h2>Dashboard tiempo real · datos en vivo del schema divisas.</h2></header>
+        <p class="hint">
+          El schema <code>divisas</code> en el RDS está poblado con <strong>90.000 ticks de los últimos 30 días</strong> + 100 portafolios + 500 notificaciones generadas por el modelo. Charts SVG inline render en el navegador (sin dependencias externas), datos reales del backend.
+        </p>
+        <div class="stack-block">
+          <div class="stack-head">Stack en uso aquí (esta entrega)</div>
+          <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">Schema PostgreSQL <code>divisas</code></div>
+              <div class="label">Qué es</div>
+              <div class="desc">5 tablas (par_divisa, tipo_cambio_tick, usuario_portafolio, notificacion, modelo_recomendacion) + 1 vista <code>vw_dashboard</code>. Demuestra la separación de bounded contexts del Ej.1.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">Backing store de los KPIs y charts del dashboard. 90K ticks + 100 portafolios + 500 notificaciones poblados con random walk + Beta distribution para scores realistas.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">SVG inline charts <span class="acronym">no dependencies</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Charts dibujados como SVG directamente desde TypeScript, sin librerías externas (Chart.js, D3, Recharts). Bundle más liviano, control total del estilo.</div>
+              <div class="label">Rol aquí</div>
+              <div class="desc role">4 charts: line (precio USD/COP), donut (tipos de notificación), histograma (score modelo), funnel (CTR/conversión). Renderizados en el navegador desde datos del backend.</div>
+            </div>
+          </div>
+        </div>
+        <div class="stack-block">
+          <div class="stack-head">Stack que propondría para PRODUCCIÓN del Ej.2</div>
+          <div class="stack-pills">
+            <div class="stack-pill">
+              <div class="name">Amazon MSK <span class="acronym">Managed Kafka</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Apache Kafka gestionado por AWS. Bus de eventos durable con replay; brokers, ZooKeeper y operación los administra AWS.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">Topics <code>market-ticks</code> (ingesta feed de mercado), <code>user-events</code> (transacciones app), <code>portafolio-cdc</code> (cambios de portafolio).</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Kinesis Data Analytics for Flink <span class="acronym">stream processing</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Apache Flink gestionado. Permite ventanas deslizantes con state, checkpointing, processing-time vs event-time.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">Calcula features rolling (volatilidad 5min, retorno 1h) sobre los ticks. Materializa output a DynamoDB (online) y S3 (offline).</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">Amazon DynamoDB <span class="acronym">NoSQL key-value</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Base NoSQL serverless con latencia ms por PK. Pago por request (on-demand) o capacidad reservada. Escala horizontalmente sin intervención.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">Estado online del portafolio por <code>user_id</code> + último precio por par. Consultado en cada inferencia del modelo (latencia &lt; 50 ms).</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">SageMaker Endpoint <span class="acronym">ML inference</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Endpoint HTTPS para servir modelos ML en tiempo real. Soporta multi-variant (A/B) y shadow mode para reentrenamientos sin downtime.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">Modelo LightGBM v0.3-prod sirviendo recomendaciones <code>{tipo, score}</code> con latencia p99 &lt; 250 ms.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">SageMaker Feature Store <span class="acronym">MLOps</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">Repositorio de features con copia online (ms latency) y offline (S3 + Athena). Garantiza consistencia training-serving.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">Mantiene 200+ features sincronizadas. Evita training-serving skew (típico problema cuando el código de features se desincroniza).</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">EventBridge + Lambda <span class="acronym">orchestration</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">EventBridge: bus de eventos con rules (filtros) que disparan targets. Lambda: serverless functions Python/Node/Java con cold start sub-segundo.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">EventBridge aplica circuit breakers (rate limit, hora, contradicciones). Lambda orquestador inserta a RDS y publica a SNS.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">SNS + Pinpoint <span class="acronym">notifications</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">SNS: pub/sub para notificaciones. Pinpoint: capa encima con multi-canal (push FCM/APNs, SMS, email), segmentación, journeys, tracking.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">Entrega final al usuario en su canal preferido (push/SMS/email) con tracking de delivery, click, convert.</div>
+            </div>
+            <div class="stack-pill">
+              <div class="name">QuickSight + OpenSearch <span class="acronym">dashboards</span></div>
+              <div class="label">Qué es</div>
+              <div class="desc">QuickSight: BI tool de AWS (pago por usuario+sesión) sobre Athena/S3. OpenSearch: motor de búsqueda y agregación tipo Elasticsearch para logs.</div>
+              <div class="label">Rol</div>
+              <div class="desc role">QuickSight para KPIs ejecutivos diarios. OpenSearch+Kibana para drill-down operacional segundo a segundo (latencia, throughput, errores).</div>
+            </div>
+          </div>
+        </div>
+        <div class="divisas-kpis" id="divisas-kpis">cargando…</div>
+        <div class="dashboard-charts">
+          <div class="chart-card">
+            <h4>Evolución del par USD/COP (últimas 24h)</h4>
+            <div id="chart-ticks-line" class="chart-area">cargando…</div>
+          </div>
+          <div class="chart-card">
+            <h4>Distribución de notificaciones por tipo</h4>
+            <div id="chart-notif-donut" class="chart-area">cargando…</div>
+          </div>
+          <div class="chart-card">
+            <h4>Histograma de score de confianza del modelo</h4>
+            <div id="chart-score-hist" class="chart-area">cargando…</div>
+          </div>
+          <div class="chart-card">
+            <h4>Funnel · enviadas → leídas → convertidas</h4>
+            <div id="chart-funnel" class="chart-area">cargando…</div>
+          </div>
+        </div>
+        <h4 class="sub-h">Tabla · últimos 30 ticks de mercado (ventana 24h)</h4>
+        <div id="divisas-ticks" class="divisas-table">cargando…</div>
+        <h4 class="sub-h">Últimas notificaciones generadas por el modelo</h4>
+        <div id="divisas-notifs" class="divisas-table">cargando…</div>
+        <h4 class="sub-h">Catálogo de modelos (registro de versiones)</h4>
+        <div id="divisas-modelos" class="divisas-table">cargando…</div>
+      </article>
+
+      <article class="chapter">
+        <header><span class="chapnum">A</span><h2>Diagrama y propuesta arquitectónica.</h2></header>
+        <p class="hint">
+          Propuesta autoritativa con diagrama Mermaid (con zoom y pan) + supuestos + componentes con alternativas evaluadas + flujo paso a paso + modelo ML + dashboard de datos + reglas de negocio + KPIs + compliance + costos estimados.
+        </p>
+        <div class="exercise" id="ej2-render">cargando…</div>
+      </article>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- TAB · EJ.3 · 5 PREGUNTAS                                      -->
+    <!-- ============================================================ -->
+    <main class="tab-pane" data-pane="ej3">
+      <section class="brief">
+        <h2 class="brief-title">Ejercicio 3 · Preguntas generales (5)</h2>
+        <p class="brief-quote">
+          Las 5 preguntas conceptuales de la prueba, respondidas con detalle Senior+. Cada respuesta
+          incluye experiencia personal, criterios de decisión, alternativas evaluadas y casos reales.
+        </p>
+      </section>
+
+      <div id="ej3-questions">cargando preguntas…</div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- DOWNLOADS ASIDE (siempre visible)                             -->
+    <!-- ============================================================ -->
+    <aside class="downloads" id="downloads-panel" aria-label="Descargas">
+      <button class="dl pdf" id="dl-pdf" aria-label="Descargar Respuesta Técnica">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path fill="#e10000" d="M5 2h10l5 5v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
+          <path fill="#fff" d="M5.4 18.5h-.7v-4.2h1.4q.7 0 1.1.4.4.3.4 1 0 .6-.4 1-.4.3-1.1.3h-.7v1.5zm0-3.5v1.4h.6q.3 0 .5-.2.2-.2.2-.5 0-.7-.7-.7h-.6zm3.4 3.5v-4.2h1.3q.9 0 1.5.5.5.6.5 1.6 0 1-.5 1.6-.6.5-1.5.5H8.8zm.7-3.5v2.8h.6q.6 0 .9-.4.3-.4.3-1 0-.7-.3-1-.3-.4-.9-.4h-.6zm5.3-.7h2.4v.7H15.5v1.2h1.7v.7h-1.7v1.6h-.7v-4.2z"/>
+        </svg>
+        <span>Respuesta Técnica</span>
+      </button>
+      <a class="dl gh" id="dl-repo" href="https://github.com/dapovedag/aws_test" target="_blank" rel="noopener" aria-label="Abrir repositorio en GitHub">
+        <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>Repositorio GitHub</span>
+      </a>
+      <details class="dl-export">
+        <summary aria-label="Exportar tablas como CSV">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path fill="#1f7a3a" d="M5 2h10l5 5v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
+            <path fill="#fff" d="M6 11h12v1.5H6zm0 2.5h12V15H6zm0 2.5h12v1.5H6zm0 2.5h7v1H6z"/>
+          </svg>
+          <span>Exportar CSV</span>
+          <span class="chev">▾</span>
+        </summary>
+        <ul id="export-list"></ul>
+      </details>
+    </aside>
+
+    <footer class="colophon">
+      <div>
+        <span>Colophon</span>
+        <p>Bodoni Moda + IBM Plex. Stack RDS · Glue · Athena · Redshift · Lake Formation · Spring Boot · Terraform.</p>
+      </div>
+      <div>
+        <span>Services</span>
+        <p>Amazon RDS · S3 · Glue · Lake Formation · Athena · Redshift Serverless · EC2 · Cost Explorer · Python (boto3)</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
