@@ -52,7 +52,6 @@ backend/src/main/resources/static/
 # Local tools and prior preview workspace
 /tools/
 frontend-preview/
-.claude/
 PruebaAWS.pdf
 report.pdf
 infra/terraform/.secrets/
@@ -64,3 +63,6 @@ infra/terraform/apply3.log
 # Local PDF preview output
 pdf-preview*.pdf
 
+
+.vercel
+.env*.local
