@@ -695,7 +695,7 @@ code {
   overflow: auto;
   position: absolute;
   right: calc(100% + 8px);
-  top: 0;
+  bottom: 0;
   background: #ffffff;
   border: 1px solid #0a0a0a;
   min-width: 240px;
