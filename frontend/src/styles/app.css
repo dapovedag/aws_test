@@ -691,24 +691,26 @@ code {
   list-style: none;
   padding: 0.5rem 0.75rem;
   margin: 0;
-  max-height: 280px;
+  max-height: 320px;
   overflow: auto;
   position: absolute;
   right: calc(100% + 8px);
   top: 0;
-  background: #fff;
-  border: 1px solid var(--ink);
-  min-width: 220px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  background: #ffffff;
+  border: 1px solid #0a0a0a;
+  min-width: 240px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  z-index: 200;
 }
 .downloads .dl-export li a {
   display: block;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  padding: 4px 0;
-  color: var(--ink);
-  border-bottom: 1px dotted var(--line);
+  font-size: 0.8rem;
+  padding: 6px 0;
+  color: #0a0a0a;
+  border-bottom: 1px dotted #e3e3e3;
   text-decoration: none;
+  opacity: 1;
 }
 .downloads .dl-export li a:hover { color: var(--red); }
 .downloads .dl-export li:last-child a { border-bottom: none; }
