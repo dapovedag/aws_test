@@ -750,7 +750,7 @@ function chartFunnel(el: HTMLElement, stages: Array<{ label: string; value: numb
 // Bootstrap
 // ---------------------------------------------------------------------------
 const today = $('#today');
-if (today) today.textContent = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+if (today) today.textContent = new Date('2026-04-17').toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
 
 wireTabs();
 
